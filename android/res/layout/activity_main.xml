@@ -400,5 +400,48 @@
             android:textColor="#A09789"
             android:lineSpacingExtra="4dp"
             android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="刷新机制（排查用）"
+            android:textSize="13sp"
+            android:textColor="#8D8478"
+            android:layout_marginTop="26dp" />
+
+        <TextView
+            android:id="@+id/tvDiag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12.5sp"
+            android:textColor="#4A443C"
+            android:lineSpacingExtra="6dp"
+            android:layout_marginTop="6dp" />
+
+        <TextView
+            android:id="@+id/btnSimTick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="立即模拟零点刷新"
+            android:textSize="14sp"
+            android:textColor="#6E655A"
+            android:gravity="center"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:background="@drawable/chip_bg"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/btnCheckDiag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="重新读取状态"
+            android:textSize="14sp"
+            android:textColor="#6E655A"
+            android:gravity="center"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:background="@drawable/chip_bg"
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 </ScrollView>

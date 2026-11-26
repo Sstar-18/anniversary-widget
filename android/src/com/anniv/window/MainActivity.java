@@ -161,6 +161,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.btnSave).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) { save(); }
         });
+        setupDiag();
 
         paintPhoto();
         findViewById(R.id.btnPhoto).setOnClickListener(new View.OnClickListener() {
@@ -418,6 +419,27 @@ public class MainActivity extends Activity {
         tv.setText(Photo.has(this)
                 ? "已放好一张，桌面中间就是它；换一张直接再选。"
                 : "还没放照片，中间那块会显示一个空相框。");
+    }
+
+
+    private void setupDiag() {
+        final TextView tv = (TextView) findViewById(R.id.tvDiag);
+        tv.setText(WidgetProvider.diagText(this));
+        findViewById(R.id.btnSimTick).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                int n = WidgetProvider.simulateTick(MainActivity.this);
+                tv.setText(WidgetProvider.diagText(MainActivity.this));
+                Toast.makeText(MainActivity.this,
+                        n > 0 ? "已向 " + n + " 个小组件发送重绘" : "桌面上还没有小组件",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        findViewById(R.id.btnCheckDiag).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                tv.setText(WidgetProvider.diagText(MainActivity.this));
+                Toast.makeText(MainActivity.this, "已重新读取", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }

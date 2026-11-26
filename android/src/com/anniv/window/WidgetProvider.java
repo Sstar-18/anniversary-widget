@@ -28,6 +28,7 @@ public class WidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager mgr, int[] ids) {
         final Context app = context.getApplicationContext();
         for (int id : ids) update(app, mgr, id);
+        mark(app, "30 分钟定时");
         scheduleNext(app);
 
         if (Llm.needFetch(app)) {
@@ -68,9 +69,54 @@ public class WidgetProvider extends AppWidgetProvider {
                 || Intent.ACTION_BOOT_COMPLETED.equals(action)
                 || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
             final Context app = context.getApplicationContext();
+            if (ACTION_TICK.equals(action)) {
+                android.content.SharedPreferences sp = app.getSharedPreferences(Core.PREFS, 0);
+                sp.edit().putInt("tick_count", sp.getInt("tick_count", 0) + 1).apply();
+                mark(app, "零点闹钟");
+            } else {
+                mark(app, "日期/时区广播");
+            }
             refreshAll(app);
             scheduleNext(app);
         }
+    }
+
+    static void mark(Context context, String src) {
+        context.getSharedPreferences(Core.PREFS, 0).edit()
+                .putLong("last_refresh", System.currentTimeMillis())
+                .putString("last_src", src).apply();
+    }
+
+    /** 手动模拟一次零点触发，返回当前桌面上的小组件数量 */
+    static int simulateTick(Context context) {
+        AppWidgetManager mgr = AppWidgetManager.getInstance(context);
+        int[] ids = mgr.getAppWidgetIds(new ComponentName(context, WidgetProvider.class));
+        Intent i = new Intent(context, WidgetProvider.class);
+        i.setAction(ACTION_TICK);
+        context.sendBroadcast(i);
+        return ids.length;
+    }
+
+    static String diagText(Context context) {
+        android.content.SharedPreferences sp = context.getSharedPreferences(Core.PREFS, 0);
+        long last = sp.getLong("last_refresh", 0);
+        String src = sp.getString("last_src", "—");
+        int cnt = sp.getInt("tick_count", 0);
+        long next = sp.getLong("next_alarm", 0);
+        java.text.SimpleDateFormat f = new java.text.SimpleDateFormat("MM-dd HH:mm:ss");
+        StringBuilder sb = new StringBuilder();
+        sb.append("下次自动刷新：").append(next > 0 ? f.format(new java.util.Date(next)) : "未登记");
+        if (next > 0) {
+            long left = next - System.currentTimeMillis();
+            long h = left / 3600000L, m = (left % 3600000L) / 60000L;
+            sb.append("（还有 ").append(h).append(" 小时 ").append(m).append(" 分）");
+        }
+        sb.append("\n最近一次刷新：").append(last > 0 ? f.format(new java.util.Date(last)) + " · " + src : "—");
+        sb.append("\n零点触发累计：").append(cnt).append(" 次");
+        int n = AppWidgetManager.getInstance(context)
+                .getAppWidgetIds(new ComponentName(context, WidgetProvider.class)).length;
+        sb.append("\n当前桌面小组件：").append(n).append(" 个");
+        return sb.toString();
     }
 
     static PendingIntent tickIntent(Context context) {
@@ -91,6 +137,7 @@ public class WidgetProvider extends AppWidgetProvider {
         cal.set(Calendar.SECOND, 20);
         cal.set(Calendar.MILLISECOND, 0);
         long at = cal.getTimeInMillis();
+        context.getSharedPreferences(Core.PREFS, 0).edit().putLong("next_alarm", at).apply();
         try {
             if (Build.VERSION.SDK_INT >= 23) {
                 am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pi);
