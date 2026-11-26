@@ -7,6 +7,11 @@
   <img src="docs/desktop.jpg" width="420" alt="桌面小窗">
 </p>
 
+## 直接安装
+
+- 安卓安装包：[`dist/anniversary-widget-v4.3.apk`](dist/anniversary-widget-v4.3.apk)（83 KB）
+- 网页版不用装：直接双击 `纪念日小窗.html`
+
 ## 功能
 
 - **天数**：按起止日期算「第 N 天」与下个纪念日倒数，日期变化/时区变化/时间修改会自动刷新
