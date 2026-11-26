@@ -1,8 +1,11 @@
 package com.anniv.window;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.os.Build;
+import java.util.Calendar;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -17,10 +20,15 @@ import java.util.List;
 /** 桌面小组件：不用打开任何应用，直接挂在桌面上。 */
 public class WidgetProvider extends AppWidgetProvider {
 
+    /** 每天零点自己叫醒自己刷新一次；厂商省电策略砍掉 30 分钟定时时的兜底 */
+    static final String ACTION_TICK = "com.anniv.window.WIDGET_TICK";
+    private static final int ALARM_REQ = 42;
+
     @Override
     public void onUpdate(Context context, AppWidgetManager mgr, int[] ids) {
         final Context app = context.getApplicationContext();
         for (int id : ids) update(app, mgr, id);
+        scheduleNext(app);
 
         if (Llm.needFetch(app)) {
             final PendingResult pr = goAsync();
@@ -35,12 +43,62 @@ public class WidgetProvider extends AppWidgetProvider {
     }
 
     @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        scheduleNext(context.getApplicationContext());
+    }
+
+    @Override
+    public void onDisabled(Context context) {
+        super.onDisabled(context);
+        try {
+            AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            if (am != null) am.cancel(tickIntent(context));
+        } catch (Throwable ignored) { }
+    }
+
+    @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        if (Intent.ACTION_DATE_CHANGED.equals(intent.getAction())
-                || Intent.ACTION_TIME_CHANGED.equals(intent.getAction())
-                || Intent.ACTION_TIMEZONE_CHANGED.equals(intent.getAction())) {
-            refreshAll(context.getApplicationContext());
+        String action = intent.getAction();
+        if (ACTION_TICK.equals(action)
+                || Intent.ACTION_DATE_CHANGED.equals(action)
+                || Intent.ACTION_TIME_CHANGED.equals(action)
+                || Intent.ACTION_TIMEZONE_CHANGED.equals(action)
+                || Intent.ACTION_BOOT_COMPLETED.equals(action)
+                || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) {
+            final Context app = context.getApplicationContext();
+            refreshAll(app);
+            scheduleNext(app);
+        }
+    }
+
+    static PendingIntent tickIntent(Context context) {
+        Intent i = new Intent(context, WidgetProvider.class);
+        i.setAction(ACTION_TICK);
+        return PendingIntent.getBroadcast(context, ALARM_REQ, i,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+    }
+
+    static void scheduleNext(Context context) {
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        if (am == null) return;
+        PendingIntent pi = tickIntent(context);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 20);
+        cal.set(Calendar.MILLISECOND, 0);
+        long at = cal.getTimeInMillis();
+        try {
+            if (Build.VERSION.SDK_INT >= 23) {
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pi);
+            } else {
+                am.setExact(AlarmManager.RTC_WAKEUP, at, pi);
+            }
+        } catch (Throwable t) {
+            try { am.set(AlarmManager.RTC_WAKEUP, at, pi); } catch (Throwable ignored) { }
         }
     }
 

@@ -19,7 +19,7 @@ $BT/aapt2 link -o build/base.apk \
   -R build/res.zip \
   --java build/gen \
   --min-sdk-version 24 --target-sdk-version 30 \
-  --version-code 39 --version-name 4.3 \
+  --version-code 40 --version-name 4.4 \
   --auto-add-overlay
 
 echo "== 3/6 编译 Java =="
