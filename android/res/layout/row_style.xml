@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="9dp"
+    android:paddingBottom="9dp">
+
+    <TextView
+        android:id="@+id/stName"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:text="纸笺"
+        android:textSize="14sp"
+        android:fontFamily="serif"
+        android:textColor="#232019" />
+
+    <TextView
+        android:id="@+id/stDesc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="米白宣纸，宋体大数字"
+        android:textSize="11.5sp"
+        android:textColor="#8D8478" />
+
+    <TextView
+        android:id="@+id/stMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="○"
+        android:textSize="15sp"
+        android:textColor="#A9443C"
+        android:paddingLeft="10dp" />
+</LinearLayout>

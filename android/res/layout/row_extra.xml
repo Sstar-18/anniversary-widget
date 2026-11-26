@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp">
+
+    <EditText
+        android:id="@+id/exName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="她的生日"
+        android:textSize="14sp"
+        android:textColor="#232019"
+        android:textColorHint="#B3A995"
+        android:inputType="text"
+        android:singleLine="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
+
+    <TextView
+        android:id="@+id/exDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="02-14"
+        android:textSize="13.5sp"
+        android:textColor="#5F574C"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp" />
+
+    <TextView
+        android:id="@+id/exDel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="×"
+        android:textSize="16sp"
+        android:textColor="#B3A995"
+        android:padding="8dp" />
+</LinearLayout>

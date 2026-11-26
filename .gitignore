@@ -1,0 +1,13 @@
+# 构建产物
+android/build/
+build/
+*.apk
+*.idsig
+*.keystore
+
+# 设计过程稿与截图（README 用图已放在 docs/）
+_proposals/
+_shots/
+__pycache__/
+*.pyc
+.DS_Store

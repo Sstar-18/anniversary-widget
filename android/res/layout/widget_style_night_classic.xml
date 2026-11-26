@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/w_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg_night">
+
+    <ImageView
+        android:id="@+id/w_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="9dp"
+        android:paddingBottom="9dp">
+
+        <!-- 上排：左右两侧同宽（84dp），中间相框自然居中，和顶上的三个环对齐 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="top">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="bottom">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="在 一 起"
+                    android:textSize="10sp"
+                    android:textColor="#9C9280"
+                    android:letterSpacing="0.14"
+                    android:includeFontPadding="false"
+                    android:singleLine="true" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="bottom"
+                    android:layout_marginTop="2dp">
+
+                    <TextView
+                        android:id="@+id/w_days"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="584"
+                        android:textSize="30sp"
+                        android:fontFamily="serif"
+                        android:textColor="#F2E9DA"
+                        android:includeFontPadding="false"
+                        android:singleLine="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="天"
+                        android:textSize="11sp"
+                        android:textColor="#9C9280"
+                        android:layout_marginLeft="3dp"
+                        android:layout_marginBottom="5dp"
+                        android:singleLine="true" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/w_span"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 年 7 个月 4 天"
+                    android:textSize="9.5sp"
+                    android:textColor="#9C9280"
+                    android:layout_marginTop="1dp"
+                    android:singleLine="true" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <LinearLayout
+                android:layout_width="84dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/w_term"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="霜降 18/24"
+                    android:textSize="9.5sp"
+                    android:textColor="#C8A46A"
+                    android:includeFontPadding="false"
+                    android:singleLine="true" />
+
+                <ImageView
+                    android:id="@+id/w_wpanel"
+                    android:layout_width="84dp"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="2dp"
+                    android:scaleType="fitXY" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#3AC8A46A" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/w_heart_l"
+                    android:layout_width="22dp"
+                    android:layout_height="9dp"
+                    android:layout_marginRight="6dp"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/w_next_pre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="距"
+                    android:textSize="13sp"
+                    android:textColor="#9C9280"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/w_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="立冬"
+                    android:textSize="13sp"
+                    android:textColor="#F2E9DA"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true" />
+
+                <TextView
+                    android:id="@+id/w_next_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 天"
+                    android:textSize="13sp"
+                    android:textColor="#C8A46A"
+                    android:layout_marginLeft="5dp"
+                    android:singleLine="true" />
+                <ImageView
+                    android:id="@+id/w_heart_r"
+                    android:layout_width="22dp"
+                    android:layout_height="9dp"
+                    android:layout_marginLeft="6dp"
+                    android:scaleType="fitXY" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/w_chips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:id="@+id/w_chip1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:textSize="9sp"
+                    android:textColor="#B7AC99"
+                    android:background="@drawable/chip_bg_night"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:singleLine="true" />
+                <TextView
+                    android:id="@+id/w_chip2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:textSize="9sp"
+                    android:textColor="#B7AC99"
+                    android:background="@drawable/chip_bg_night"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:singleLine="true" />
+                <TextView
+                    android:id="@+id/w_chip3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:textSize="9sp"
+                    android:textColor="#B7AC99"
+                    android:background="@drawable/chip_bg_night"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:singleLine="true" />
+                <TextView
+                    android:id="@+id/w_chip4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:textSize="9sp"
+                    android:textColor="#B7AC99"
+                    android:background="@drawable/chip_bg_night"
+                    android:paddingLeft="7dp"
+                    android:paddingRight="7dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:singleLine="true" />
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+        <TextView
+            android:id="@+id/w_quote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="锅里汤还温着，等你进门。"
+            android:textSize="11sp"
+            android:textColor="#C6BA9F"
+            android:layout_marginTop="2dp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/w_rings"
+        android:layout_width="match_parent"
+        android:layout_height="22dp"
+        android:layout_gravity="top|center_horizontal"
+        android:scaleType="fitXY" />
+</FrameLayout>

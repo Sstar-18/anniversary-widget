@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>在一起 · 纪念日小窗</title>
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='8' fill='%23a9443c'/><rect x='10' y='10' width='44' height='44' fill='none' stroke='%23f3ece1' stroke-width='3'/><text x='32' y='44' font-size='26' font-family='serif' fill='%23f3ece1' text-anchor='middle'>日</text></svg>">
+<style>
+/* ========== 基础 ========== */
+:root{
+  --paper:#f4ede2; --paper-deep:#ece1d1; --ink:#232019; --ink-2:#5f574c; --ink-3:#8d8478;
+  --hair:rgba(35,32,25,.13); --cinnabar:#a9443c; --gold:#9c7a45;
+  --spring:#6d8f5c; --summer:#a9443c; --autumn:#a5762f; --winter:#4b6377;
+  --accent:var(--autumn);
+  --serif:"Songti SC","Noto Serif CJK SC","Source Han Serif SC",Georgia,"Times New Roman",serif;
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{background:var(--paper);}
+body{
+  color:var(--ink);font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(120% 90% at 50% 0%, #fbf6ee 0%, var(--paper) 42%, var(--paper-deep) 100%);
+  min-height:100vh;
+}
+.grain{
+  position:fixed;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;z-index:0;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='150' height='150' filter='url(%23n)' opacity='0.16'/></svg>");
+}
+
+/* ========== 版面 ========== */
+.sheet{position:relative;z-index:1;width:100%;max-width:1140px;margin:0 auto;padding:26px 20px 30px;}
+.grid{display:grid;grid-template-columns:1fr;gap:24px;}
+
+/* 宽屏：整页变成桌面上的一张纸，居中放置 */
+@media (min-width:880px){
+  body{display:grid;place-items:center;padding:34px 24px;}
+  .sheet{
+    max-width:1020px;margin:0;padding:46px 52px 42px;
+    background:linear-gradient(178deg,#fcf8f1 0%,#f5eee1 100%);
+    border:1px solid rgba(35,32,25,.11);border-radius:2px;
+    box-shadow:0 34px 64px -38px rgba(70,52,34,.45),0 1px 0 rgba(255,255,255,.85) inset;
+  }
+  .grid{
+    grid-template-columns:1.06fr .94fr;
+    grid-template-areas:"hero next" "hero list" "terms terms";
+    column-gap:56px;row-gap:22px;
+  }
+  .hero-cell{grid-area:hero;align-self:start;}
+  .next-cell{grid-area:next;}
+  .list-cell{grid-area:list;}
+  .terms-cell{grid-area:terms;margin-top:10px;padding-top:16px;border-top:1px solid var(--hair);}
+}
+
+/* ========== 顶栏 ========== */
+.topbar{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding-bottom:14px;border-bottom:1px solid var(--hair);margin-bottom:22px;}
+.tl{display:flex;align-items:baseline;gap:14px;min-width:0;}
+.dateline{font-size:13.5px;color:var(--ink-2);letter-spacing:.06em;white-space:nowrap;}
+.dateline b{font-weight:600;color:var(--ink);}
+.today-term{
+  font-family:var(--serif);font-size:13px;color:var(--accent);letter-spacing:.14em;white-space:nowrap;
+  padding-left:14px;border-left:1px solid var(--hair);
+}
+.gear{
+  appearance:none;border:0;background:none;cursor:pointer;color:var(--ink-3);
+  width:30px;height:30px;display:grid;place-items:center;border-radius:50%;
+  transition:color .18s, background .18s;flex:none;
+}
+.gear:hover{color:var(--ink);background:rgba(35,32,25,.05);}
+.gear svg{width:17px;height:17px;}
+
+/* ========== 主视觉 ========== */
+.hero{position:relative;padding:4px 0 18px;}
+.stamp{
+  position:absolute;right:4px;top:2px;writing-mode:vertical-rl;
+  font-family:var(--serif);font-size:15px;letter-spacing:.18em;
+  color:var(--paper);background:var(--cinnabar);padding:9px 6px;
+  border-radius:3px;line-height:1.1;transform:rotate(-2deg);
+  box-shadow:0 2px 0 rgba(169,68,60,.18);opacity:.92;
+}
+.eyebrow{font-size:12.5px;letter-spacing:.34em;color:var(--ink-3);text-transform:none;}
+.days-row{display:flex;align-items:flex-end;gap:12px;margin-top:10px;}
+.days{
+  font-family:var(--serif);font-weight:500;color:var(--ink);
+  font-size:clamp(72px,15vw,146px);line-height:.84;letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;font-feature-settings:"tnum";
+}
+.unit{font-family:var(--serif);font-size:22px;color:var(--ink-2);padding-bottom:10px;letter-spacing:.1em;}
+.hero-sub{margin-top:26px;font-size:14.5px;color:var(--ink-2);letter-spacing:.02em;line-height:1.9;}
+.hero-sub em{font-style:normal;font-family:var(--serif);color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums;}
+.clock{margin-top:2px;font-size:13px;color:var(--ink-3);letter-spacing:.12em;font-variant-numeric:tabular-nums;}
+.clock span{color:var(--ink-2);}
+.foot{margin-top:14px;font-size:12.5px;color:var(--ink-3);letter-spacing:.04em;}
+
+/* ========== 下一件事 ========== */
+.next{
+  border:1px solid var(--hair);border-radius:2px;padding:20px 18px 16px;background:rgba(255,255,255,.34);
+  position:relative;
+}
+.next::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--accent);opacity:.85;}
+.next .cap{font-size:11.5px;letter-spacing:.36em;color:var(--ink-3);}
+.next-name{font-family:var(--serif);font-size:20px;margin-top:10px;letter-spacing:.08em;}
+.next-count{display:flex;align-items:baseline;gap:8px;margin-top:6px;}
+.next-num{font-family:var(--serif);font-size:clamp(38px,7vw,52px);line-height:1;font-variant-numeric:tabular-nums;color:var(--accent);}
+.next-unit{font-size:14px;color:var(--ink-2);letter-spacing:.12em;}
+.next-meta{margin-top:10px;font-size:12.5px;color:var(--ink-3);letter-spacing:.04em;}
+
+/* ========== 清单 ========== */
+.list{display:flex;flex-direction:column;}
+.list-head{font-size:11.5px;letter-spacing:.36em;color:var(--ink-3);padding-bottom:10px;}
+.row{display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid var(--hair);}
+.row:last-child{border-bottom:0;}
+.row-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.55;flex:none;}
+.row-main{flex:1;min-width:0;}
+.row-name{font-family:var(--serif);font-size:15.5px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.row-date{font-size:12px;color:var(--ink-3);margin-top:3px;letter-spacing:.03em;}
+.row-num{font-family:var(--serif);font-size:19px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ink);}
+.row-num small{font-size:11.5px;color:var(--ink-3);margin-left:3px;font-family:var(--sans);}
+.row-num.today{color:var(--cinnabar);font-size:15px;}
+
+/* ========== 节气刻度 ========== */
+.terms{padding-top:8px;}
+.terms-cap{display:flex;justify-content:space-between;align-items:baseline;font-size:11.5px;color:var(--ink-3);letter-spacing:.24em;margin-bottom:10px;}
+.dots{display:flex;align-items:flex-end;gap:3px;height:30px;}
+.dot{flex:1;height:14px;border-radius:1px;opacity:.12;transition:height .3s, opacity .3s;}
+.dot.past{opacity:.46;}
+.dot.now{opacity:1;height:26px;}
+.scale{display:flex;margin-top:7px;}
+.scale span{flex:1;font-size:11.5px;color:var(--ink-3);letter-spacing:.2em;}
+.term-foot{margin-top:9px;font-size:12.5px;color:var(--ink-2);letter-spacing:.03em;}
+.term-foot b{font-weight:600;color:var(--accent);font-family:var(--serif);letter-spacing:.08em;}
+
+/* ========== 设置面板 ========== */
+.mask{position:fixed;inset:0;background:rgba(30,26,21,.42);backdrop-filter:blur(2px);z-index:40;display:none;align-items:center;justify-content:center;padding:20px;}
+.mask.on{display:flex;}
+.panel{width:100%;max-width:400px;max-height:88vh;overflow:auto;background:var(--paper);border-radius:3px;padding:22px;box-shadow:0 24px 60px rgba(30,24,18,.28);}
+.panel h2{font-family:var(--serif);font-size:17px;font-weight:600;letter-spacing:.1em;}
+.panel p.tip{font-size:12px;color:var(--ink-3);margin-top:6px;line-height:1.7;}
+.field{margin-top:14px;}
+.field label{display:block;font-size:12px;color:var(--ink-2);letter-spacing:.1em;margin-bottom:5px;}
+.field input{
+  width:100%;padding:9px 10px;font-size:14px;font-family:var(--sans);color:var(--ink);
+  background:rgba(255,255,255,.6);border:1px solid var(--hair);border-radius:2px;outline:none;
+}
+.field input:focus{border-color:var(--accent);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.extra-list{margin-top:8px;}
+.extra-row{display:flex;gap:8px;align-items:center;margin-bottom:6px;}
+.extra-row input{padding:7px 8px;font-size:13px;}
+.extra-row input[name="ename"]{flex:1;min-width:0;}
+.extra-row input[name="edate"]{width:118px;flex:none;}
+.del{appearance:none;border:0;background:none;color:var(--ink-3);cursor:pointer;font-size:13px;padding:4px 6px;}
+.del:hover{color:var(--cinnabar);}
+.actions{display:flex;gap:10px;margin-top:20px;}
+.btn{
+  appearance:none;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+  font-size:13.5px;letter-spacing:.14em;padding:10px 20px;cursor:pointer;border-radius:2px;font-family:var(--sans);
+}
+.btn:hover{background:#3a342b;}
+.btn.ghost{background:none;color:var(--ink-2);border-color:var(--hair);}
+.btn.ghost:hover{background:rgba(35,32,25,.05);}
+.hint{font-size:11.5px;color:var(--ink-3);margin-top:14px;line-height:1.8;}
+
+/* 窄屏 / 桌面小窗：收紧节奏，一屏放得下 */
+@media (max-width:560px){
+  .sheet{padding:16px 15px 20px;}
+  .grid{gap:16px;}
+  .topbar{padding-bottom:10px;margin-bottom:14px;}
+  .dateline,.today-term{font-size:13.5px;}
+  .hero{padding:2px 0 8px;}
+  .stamp{font-size:13px;padding:7px 5px;}
+  .days{font-size:clamp(58px,18vw,88px);}
+  .unit{font-size:18px;padding-bottom:6px;}
+  .hero-sub{margin-top:14px;font-size:14px;}
+  .clock{font-size:13px;}
+  .foot{margin-top:10px;font-size:12.5px;}
+  .next{padding:14px 13px 12px;}
+  .next .cap{font-size:11.5px;}
+  .next-name{font-size:18px;margin-top:7px;}
+  .next-num{font-size:44px;}
+  .next-meta{margin-top:7px;font-size:12.5px;}
+  .list-head{padding-bottom:8px;font-size:11.5px;}
+  .row{padding:10px 2px;}
+  .row-name{font-size:15px;}
+  .row-date{font-size:12.5px;margin-top:2px;}
+  .row-num{font-size:18px;}
+  .terms{padding-top:4px;}
+  .dots{height:26px;}
+  .dot.now{height:22px;}
+  .scale span{font-size:11px;}
+  .term-foot{margin-top:6px;font-size:12px;}
+  .terms-cap{margin-bottom:8px;}
+  .field input,.extra-row input{font-size:16px;}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="sheet">
+  <div class="topbar">
+    <div class="tl">
+      <div class="dateline" id="dateline"><b>十一月六日</b> · 星期五</div>
+      <div class="today-term" id="todayTerm">立冬</div>
+    </div>
+    <button class="gear" id="gear" aria-label="设置" title="设置">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <circle cx="12" cy="12" r="3.4"/><path d="M12 3.2v2.4M12 18.4v2.4M3.2 12h2.4M18.4 12h2.4M5.9 5.9l1.7 1.7M16.4 16.4l1.7 1.7M18.1 5.9l-1.7 1.7M7.6 16.4l-1.7 1.7"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="grid">
+    <section class="hero-cell hero">
+      <div class="stamp">相守</div>
+      <div class="eyebrow">在一起</div>
+      <div class="days-row">
+        <div class="days" id="days">—</div>
+        <div class="unit">天</div>
+      </div>
+      <div class="hero-sub" id="breakdown">正在计算</div>
+      <div class="clock" id="clock"></div>
+      <div class="foot" id="since"></div>
+    </section>
+
+    <section class="next-cell next">
+      <div class="cap">下一件事</div>
+      <div class="next-name" id="nextName">—</div>
+      <div class="next-count">
+        <div class="next-num" id="nextNum">—</div>
+        <div class="next-unit" id="nextUnit">天</div>
+      </div>
+      <div class="next-meta" id="nextMeta"></div>
+    </section>
+
+    <section class="list-cell list">
+      <div class="list-head">往后数</div>
+      <div id="rows"></div>
+    </section>
+
+    <section class="terms-cell terms">
+      <div class="terms-cap"><span>二十四节气</span><span id="termIndex"></span></div>
+      <div class="dots" id="dots"></div>
+      <div class="scale"><span>春</span><span>夏</span><span>秋</span><span>冬</span></div>
+      <div class="term-foot" id="termFoot"></div>
+    </section>
+  </div>
+</div>
+
+<div class="mask" id="mask">
+  <div class="panel" role="dialog" aria-modal="true" aria-label="设置">
+    <h2 id="panelTitle">谁和谁 · 从哪天起</h2>
+    <div class="two">
+      <div class="field"><label>你的名字</label><input id="inA" maxlength="8" autocomplete="off"></div>
+      <div class="field"><label>TA 的名字</label><input id="inB" maxlength="8" autocomplete="off"></div>
+    </div>
+    <div class="field"><label>在一起的第一天</label><input id="inDate" type="date"></div>
+    <div class="field"><label>当天几点（可留空）</label><input id="inTime" type="time"></div>
+    <div class="field">
+      <label>额外的纪念日（每年重复）</label>
+      <div class="extra-list" id="extraList"></div>
+      <button class="del" id="addExtra" style="border:1px dashed var(--hair);padding:7px 12px;width:100%;border-radius:2px;">+ 再加一条</button>
+    </div>
+    <div class="actions">
+      <button class="btn" id="save">存下</button>
+      <button class="btn ghost" id="cancel">先不改</button>
+    </div>
+    <p class="hint">数据只存在这台设备的浏览器里，不会上传。换电脑或换浏览器要重新填一次。</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ===== 节气时刻表（2025–2050，由 lunar-javascript 生成） ===== */
+  var RAW = "2025-01-05 10:32|小寒;2025-01-20 04:00|大寒;2025-02-03 22:10|立春;2025-02-18 18:06|雨水;2025-03-05 16:07|惊蛰;2025-03-20 17:01|春分;2025-04-04 20:48|清明;2025-04-20 03:56|谷雨;2025-05-05 13:57|立夏;2025-05-21 02:54|小满;2025-06-05 17:56|芒种;2025-06-21 10:42|夏至;2025-07-07 04:04|小暑;2025-07-22 21:29|大暑;2025-08-07 13:51|立秋;2025-08-23 04:33|处暑;2025-09-07 16:51|白露;2025-09-23 02:19|秋分;2025-10-08 08:41|寒露;2025-10-23 11:50|霜降;2025-11-07 12:04|立冬;2025-11-22 09:35|小雪;2025-12-07 05:04|大雪;2025-12-21 23:03|冬至;2026-01-05 16:23|小寒;2026-01-20 09:44|大寒;2026-02-04 04:02|立春;2026-02-18 23:51|雨水;2026-03-05 21:59|惊蛰;2026-03-20 22:45|春分;2026-04-05 02:40|清明;2026-04-20 09:39|谷雨;2026-05-05 19:48|立夏;2026-05-21 08:36|小满;2026-06-05 23:48|芒种;2026-06-21 16:24|夏至;2026-07-07 09:56|小暑;2026-07-23 03:13|大暑;2026-08-07 19:42|立秋;2026-08-23 10:18|处暑;2026-09-07 22:41|白露;2026-09-23 08:05|秋分;2026-10-08 14:29|寒露;2026-10-23 17:37|霜降;2026-11-07 17:52|立冬;2026-11-22 15:23|小雪;2026-12-07 10:52|大雪;2026-12-22 04:50|冬至;2027-01-05 22:09|小寒;2027-01-20 15:29|大寒;2027-02-04 09:46|立春;2027-02-19 05:33|雨水;2027-03-06 03:39|惊蛰;2027-03-21 04:24|春分;2027-04-05 08:17|清明;2027-04-20 15:17|谷雨;2027-05-06 01:25|立夏;2027-05-21 14:18|小满;2027-06-06 05:25|芒种;2027-06-21 22:10|夏至;2027-07-07 15:37|小暑;2027-07-23 09:04|大暑;2027-08-08 01:26|立秋;2027-08-23 16:14|处暑;2027-09-08 04:28|白露;2027-09-23 14:01|秋分;2027-10-08 20:17|寒露;2027-10-23 23:32|霜降;2027-11-07 23:38|立冬;2027-11-22 21:16|小雪;2027-12-07 16:37|大雪;2027-12-22 10:42|冬至;2028-01-06 03:54|小寒;2028-01-20 21:21|大寒;2028-02-04 15:31|立春;2028-02-19 11:26|雨水;2028-03-05 09:24|惊蛰;2028-03-20 10:17|春分;2028-04-04 14:03|清明;2028-04-19 21:09|谷雨;2028-05-05 07:12|立夏;2028-05-20 20:09|小满;2028-06-05 11:16|芒种;2028-06-21 04:02|夏至;2028-07-06 21:30|小暑;2028-07-22 14:53|大暑;2028-08-07 07:21|立秋;2028-08-22 22:00|处暑;2028-09-07 10:22|白露;2028-09-22 19:45|秋分;2028-10-08 02:08|寒露;2028-10-23 05:13|霜降;2028-11-07 05:27|立冬;2028-11-22 02:54|小雪;2028-12-06 22:24|大雪;2028-12-21 16:19|冬至;2029-01-05 09:41|小寒;2029-01-20 03:00|大寒;2029-02-03 21:20|立春;2029-02-18 17:07|雨水;2029-03-05 15:17|惊蛰;2029-03-20 16:01|春分;2029-04-04 19:58|清明;2029-04-20 02:55|谷雨;2029-05-05 13:07|立夏;2029-05-21 01:55|小满;2029-06-05 17:09|芒种;2029-06-21 09:48|夏至;2029-07-07 03:22|小暑;2029-07-22 20:42|大暑;2029-08-07 13:11|立秋;2029-08-23 03:51|处暑;2029-09-07 16:11|白露;2029-09-23 01:38|秋分;2029-10-08 07:58|寒露;2029-10-23 11:08|霜降;2029-11-07 11:16|立冬;2029-11-22 08:49|小雪;2029-12-07 04:13|大雪;2029-12-21 22:14|冬至;2030-01-05 15:30|小寒;2030-01-20 08:54|大寒;2030-02-04 03:08|立春;2030-02-18 22:59|雨水;2030-03-05 21:03|惊蛰;2030-03-20 21:52|春分;2030-04-05 01:41|清明;2030-04-20 08:43|谷雨;2030-05-05 18:46|立夏;2030-05-21 07:41|小满;2030-06-05 22:44|芒种;2030-06-21 15:31|夏至;2030-07-07 08:55|小暑;2030-07-23 02:24|大暑;2030-08-07 18:47|立秋;2030-08-23 09:36|处暑;2030-09-07 21:52|白露;2030-09-23 07:26|秋分;2030-10-08 13:45|寒露;2030-10-23 17:00|霜降;2030-11-07 17:08|立冬;2030-11-22 14:44|小雪;2030-12-07 10:07|大雪;2030-12-22 04:09|冬至;2031-01-05 21:23|小寒;2031-01-20 14:47|大寒;2031-02-04 08:58|立春;2031-02-19 04:50|雨水;2031-03-06 02:51|惊蛰;2031-03-21 03:40|春分;2031-04-05 07:28|清明;2031-04-20 14:31|谷雨;2031-05-06 00:35|立夏;2031-05-21 13:27|小满;2031-06-06 04:35|芒种;2031-06-21 21:17|夏至;2031-07-07 14:48|小暑;2031-07-23 08:10|大暑;2031-08-08 00:42|立秋;2031-08-23 15:23|处暑;2031-09-08 03:50|白露;2031-09-23 13:15|秋分;2031-10-08 19:42|寒露;2031-10-23 22:49|霜降;2031-11-07 23:05|立冬;2031-11-22 20:32|小雪;2031-12-07 16:02|大雪;2031-12-22 09:55|冬至;2032-01-06 03:16|小寒;2032-01-20 20:31|大寒;2032-02-04 14:48|立春;2032-02-19 10:32|雨水;2032-03-05 08:40|惊蛰;2032-03-20 09:21|春分;2032-04-04 13:17|清明;2032-04-19 20:14|谷雨;2032-05-05 06:25|立夏;2032-05-20 19:15|小满;2032-06-05 10:27|芒种;2032-06-21 03:08|夏至;2032-07-06 20:40|小暑;2032-07-22 14:04|大暑;2032-08-07 06:32|立秋;2032-08-22 21:18|处暑;2032-09-07 09:37|白露;2032-09-22 19:10|秋分;2032-10-08 01:30|寒露;2032-10-23 04:46|霜降;2032-11-07 04:54|立冬;2032-11-22 02:31|小雪;2032-12-06 21:53|大雪;2032-12-21 15:55|冬至;2033-01-05 09:08|小寒;2033-01-20 02:32|大寒;2033-02-03 20:41|立春;2033-02-18 16:33|雨水;2033-03-05 14:32|惊蛰;2033-03-20 15:22|春分;2033-04-04 19:08|清明;2033-04-20 02:13|谷雨;2033-05-05 12:13|立夏;2033-05-21 01:10|小满;2033-06-05 16:13|芒种;2033-06-21 09:01|夏至;2033-07-07 02:24|小暑;2033-07-22 19:52|大暑;2033-08-07 12:15|立秋;2033-08-23 03:01|处暑;2033-09-07 15:20|白露;2033-09-23 00:51|秋分;2033-10-08 07:13|寒露;2033-10-23 10:27|霜降;2033-11-07 10:41|立冬;2033-11-22 08:16|小雪;2033-12-07 03:44|大雪;2033-12-21 21:46|冬至;2034-01-05 15:04|小寒;2034-01-20 08:27|大寒;2034-02-04 02:41|立春;2034-02-18 22:30|雨水;2034-03-05 20:32|惊蛰;2034-03-20 21:17|春分;2034-04-05 01:06|清明;2034-04-20 08:03|谷雨;2034-05-05 18:09|立夏;2034-05-21 06:56|小满;2034-06-05 22:06|芒种;2034-06-21 14:44|夏至;2034-07-07 08:17|小暑;2034-07-23 01:36|大暑;2034-08-07 18:09|立秋;2034-08-23 08:47|处暑;2034-09-07 21:13|白露;2034-09-23 06:39|秋分;2034-10-08 13:07|寒露;2034-10-23 16:16|霜降;2034-11-07 16:33|立冬;2034-11-22 14:04|小雪;2034-12-07 09:36|大雪;2034-12-22 03:34|冬至;2035-01-05 20:55|小寒;2035-01-20 14:14|大寒;2035-02-04 08:31|立春;2035-02-19 04:16|雨水;2035-03-06 02:21|惊蛰;2035-03-21 03:02|春分;2035-04-05 06:53|清明;2035-04-20 13:48|谷雨;2035-05-05 23:54|立夏;2035-05-21 12:43|小满;2035-06-06 03:50|芒种;2035-06-21 20:33|夏至;2035-07-07 14:01|小暑;2035-07-23 07:28|大暑;2035-08-07 23:54|立秋;2035-08-23 14:44|处暑;2035-09-08 03:02|白露;2035-09-23 12:38|秋分;2035-10-08 18:57|寒露;2035-10-23 22:16|霜降;2035-11-07 22:23|立冬;2035-11-22 20:03|小雪;2035-12-07 15:25|大雪;2035-12-22 09:30|冬至;2036-01-06 02:43|小寒;2036-01-20 20:11|大寒;2036-02-04 14:19|立春;2036-02-19 10:14|雨水;2036-03-05 08:11|惊蛰;2036-03-20 09:02|春分;2036-04-04 12:46|清明;2036-04-19 19:50|谷雨;2036-05-05 05:49|立夏;2036-05-20 18:44|小满;2036-06-05 09:47|芒种;2036-06-21 02:32|夏至;2036-07-06 19:57|小暑;2036-07-22 13:22|大暑;2036-08-07 05:48|立秋;2036-08-22 20:32|处暑;2036-09-07 08:55|白露;2036-09-22 18:23|秋分;2036-10-08 00:49|寒露;2036-10-23 03:58|霜降;2036-11-07 04:14|立冬;2036-11-22 01:45|小雪;2036-12-06 21:16|大雪;2036-12-21 15:12|冬至;2037-01-05 08:34|小寒;2037-01-20 01:53|大寒;2037-02-03 20:11|立春;2037-02-18 15:58|雨水;2037-03-05 14:06|惊蛰;2037-03-20 14:50|春分;2037-04-04 18:44|清明;2037-04-20 01:40|谷雨;2037-05-05 11:49|立夏;2037-05-21 00:35|小满;2037-06-05 15:46|芒种;2037-06-21 08:22|夏至;2037-07-07 01:55|小暑;2037-07-22 19:12|大暑;2037-08-07 11:43|立秋;2037-08-23 02:22|处暑;2037-09-07 14:45|白露;2037-09-23 00:13|秋分;2037-10-08 06:37|寒露;2037-10-23 09:49|霜降;2037-11-07 10:04|立冬;2037-11-22 07:38|小雪;2037-12-07 03:07|大雪;2037-12-21 21:07|冬至;2038-01-05 14:26|小寒;2038-01-20 07:48|大寒;2038-02-04 02:03|立春;2038-02-18 21:52|雨水;2038-03-05 19:55|惊蛰;2038-03-20 20:40|春分;2038-04-05 00:29|清明;2038-04-20 07:28|谷雨;2038-05-05 17:31|立夏;2038-05-21 06:22|小满;2038-06-05 21:25|芒种;2038-06-21 14:09|夏至;2038-07-07 07:32|小暑;2038-07-23 00:59|大暑;2038-08-07 17:21|立秋;2038-08-23 08:10|处暑;2038-09-07 20:26|白露;2038-09-23 06:02|秋分;2038-10-08 12:21|寒露;2038-10-23 15:40|霜降;2038-11-07 15:50|立冬;2038-11-22 13:31|小雪;2038-12-07 08:56|大雪;2038-12-22 03:02|冬至;2039-01-05 20:16|小寒;2039-01-20 13:43|大寒;2039-02-04 07:52|立春;2039-02-19 03:45|雨水;2039-03-06 01:43|惊蛰;2039-03-21 02:32|春分;2039-04-05 06:15|清明;2039-04-20 13:17|谷雨;2039-05-05 23:18|立夏;2039-05-21 12:10|小满;2039-06-06 03:15|芒种;2039-06-21 19:57|夏至;2039-07-07 13:26|小暑;2039-07-23 06:48|大暑;2039-08-07 23:18|立秋;2039-08-23 13:58|处暑;2039-09-08 02:24|白露;2039-09-23 11:49|秋分;2039-10-08 18:17|寒露;2039-10-23 21:25|霜降;2039-11-07 21:42|立冬;2039-11-22 19:12|小雪;2039-12-07 14:45|大雪;2039-12-22 08:40|冬至;2040-01-06 02:03|小寒;2040-01-20 19:21|大寒;2040-02-04 13:39|立春;2040-02-19 09:23|雨水;2040-03-05 07:31|惊蛰;2040-03-20 08:11|春分;2040-04-04 12:05|清明;2040-04-19 18:59|谷雨;2040-05-05 05:09|立夏;2040-05-20 17:55|小满;2040-06-05 09:08|芒种;2040-06-21 01:46|夏至;2040-07-06 19:19|小暑;2040-07-22 12:40|大暑;2040-08-07 05:10|立秋;2040-08-22 19:53|处暑;2040-09-07 08:14|白露;2040-09-22 17:44|秋分;2040-10-08 00:05|寒露;2040-10-23 03:19|霜降;2040-11-07 03:29|立冬;2040-11-22 01:05|小雪;2040-12-06 20:30|大雪;2040-12-21 14:32|冬至;2041-01-05 07:48|小寒;2041-01-20 01:13|大寒;2041-02-03 19:25|立春;2041-02-18 15:17|雨水;2041-03-05 13:17|惊蛰;2041-03-20 14:06|春分;2041-04-04 17:52|清明;2041-04-20 00:54|谷雨;2041-05-05 10:54|立夏;2041-05-20 23:48|小满;2041-06-05 14:49|芒种;2041-06-21 07:35|夏至;2041-07-07 00:58|小暑;2041-07-22 18:26|大暑;2041-08-07 10:48|立秋;2041-08-23 01:36|处暑;2041-09-07 13:53|白露;2041-09-22 23:26|秋分;2041-10-08 05:47|寒露;2041-10-23 09:02|霜降;2041-11-07 09:13|立冬;2041-11-22 06:49|小雪;2041-12-07 02:15|大雪;2041-12-21 20:18|冬至;2042-01-05 13:35|小寒;2042-01-20 07:00|大寒;2042-02-04 01:12|立春;2042-02-18 21:04|雨水;2042-03-05 19:05|惊蛰;2042-03-20 19:53|春分;2042-04-04 23:40|清明;2042-04-20 06:39|谷雨;2042-05-05 16:42|立夏;2042-05-21 05:31|小满;2042-06-05 20:38|芒种;2042-06-21 13:15|夏至;2042-07-07 06:47|小暑;2042-07-23 00:06|大暑;2042-08-07 16:38|立秋;2042-08-23 07:18|处暑;2042-09-07 19:45|白露;2042-09-23 05:11|秋分;2042-10-08 11:40|寒露;2042-10-23 14:49|霜降;2042-11-07 15:07|立冬;2042-11-22 12:37|小雪;2042-12-07 08:09|大雪;2042-12-22 02:04|冬至;2043-01-05 19:25|小寒;2043-01-20 12:41|大寒;2043-02-04 06:58|立春;2043-02-19 02:41|雨水;2043-03-06 00:47|惊蛰;2043-03-21 01:27|春分;2043-04-05 05:20|清明;2043-04-20 12:14|谷雨;2043-05-05 22:22|立夏;2043-05-21 11:09|小满;2043-06-06 02:18|芒种;2043-06-21 18:58|夏至;2043-07-07 12:27|小暑;2043-07-23 05:53|大暑;2043-08-07 22:20|立秋;2043-08-23 13:09|处暑;2043-09-08 01:30|白露;2043-09-23 11:07|秋分;2043-10-08 17:27|寒露;2043-10-23 20:46|霜降;2043-11-07 20:55|立冬;2043-11-22 18:35|小雪;2043-12-07 13:57|大雪;2043-12-22 08:01|冬至;2044-01-06 01:12|小寒;2044-01-20 18:37|大寒;2044-02-04 12:44|立春;2044-02-19 08:35|雨水;2044-03-05 06:31|惊蛰;2044-03-20 07:20|春分;2044-04-04 11:03|清明;2044-04-19 18:06|谷雨;2044-05-05 04:05|立夏;2044-05-20 17:01|小满;2044-06-05 08:04|芒种;2044-06-21 00:51|夏至;2044-07-06 18:15|小暑;2044-07-22 11:43|大暑;2044-08-07 04:08|立秋;2044-08-22 18:54|处暑;2044-09-07 07:16|白露;2044-09-22 16:47|秋分;2044-10-07 23:13|寒露;2044-10-23 02:26|霜降;2044-11-07 02:42|立冬;2044-11-22 00:15|小雪;2044-12-06 19:45|大雪;2044-12-21 13:43|冬至;2045-01-05 07:02|小寒;2045-01-20 00:22|大寒;2045-02-03 18:36|立春;2045-02-18 14:22|雨水;2045-03-05 12:25|惊蛰;2045-03-20 13:07|春分;2045-04-04 16:57|清明;2045-04-19 23:52|谷雨;2045-05-05 09:59|立夏;2045-05-20 22:46|小满;2045-06-05 13:57|芒种;2045-06-21 06:33|夏至;2045-07-07 00:08|小暑;2045-07-22 17:26|大暑;2045-08-07 09:59|立秋;2045-08-23 00:39|处暑;2045-09-07 13:05|白露;2045-09-22 22:33|秋分;2045-10-08 05:00|寒露;2045-10-23 08:12|霜降;2045-11-07 08:29|立冬;2045-11-22 06:03|小雪;2045-12-07 01:35|大雪;2045-12-21 19:35|冬至;2046-01-05 12:56|小寒;2046-01-20 06:15|大寒;2046-02-04 00:31|立春;2046-02-18 20:15|雨水;2046-03-05 18:17|惊蛰;2046-03-20 18:57|春分;2046-04-04 22:45|清明;2046-04-20 05:39|谷雨;2046-05-05 15:40|立夏;2046-05-21 04:28|小满;2046-06-05 19:32|芒种;2046-06-21 12:14|夏至;2046-07-07 05:40|小暑;2046-07-22 23:08|大暑;2046-08-07 15:33|立秋;2046-08-23 06:24|处暑;2046-09-07 18:43|白露;2046-09-23 04:21|秋分;2046-10-08 10:42|寒露;2046-10-23 14:03|霜降;2046-11-07 14:14|立冬;2046-11-22 11:56|小雪;2046-12-07 07:21|大雪;2046-12-22 01:28|冬至;2047-01-05 18:42|小寒;2047-01-20 12:10|大寒;2047-02-04 06:18|立春;2047-02-19 02:10|雨水;2047-03-06 00:05|惊蛰;2047-03-21 00:52|春分;2047-04-05 04:32|清明;2047-04-20 11:32|谷雨;2047-05-05 21:28|立夏;2047-05-21 10:20|小满;2047-06-06 01:20|芒种;2047-06-21 18:03|夏至;2047-07-07 11:30|小暑;2047-07-23 04:55|大暑;2047-08-07 21:25|立秋;2047-08-23 12:10|处暑;2047-09-08 00:38|白露;2047-09-23 10:08|秋分;2047-10-08 16:37|寒露;2047-10-23 19:48|霜降;2047-11-07 20:07|立冬;2047-11-22 17:38|小雪;2047-12-07 13:11|大雪;2047-12-22 07:07|冬至;2048-01-06 00:29|小寒;2048-01-20 17:47|大寒;2048-02-04 12:04|立春;2048-02-19 07:48|雨水;2048-03-05 05:54|惊蛰;2048-03-20 06:33|春分;2048-04-04 10:25|清明;2048-04-19 17:17|谷雨;2048-05-05 03:24|立夏;2048-05-20 16:08|小满;2048-06-05 07:18|芒种;2048-06-20 23:54|夏至;2048-07-06 17:26|小暑;2048-07-22 10:47|大暑;2048-08-07 03:18|立秋;2048-08-22 18:02|处暑;2048-09-07 06:28|白露;2048-09-22 16:00|秋分;2048-10-07 22:26|寒露;2048-10-23 01:42|霜降;2048-11-07 01:56|立冬;2048-11-21 23:33|小雪;2048-12-06 19:00|大雪;2048-12-21 13:02|冬至;2049-01-05 06:18|小寒;2049-01-19 23:41|大寒;2049-02-03 17:53|立春;2049-02-18 13:42|雨水;2049-03-05 11:43|惊蛰;2049-03-20 12:28|春分;2049-04-04 16:14|清明;2049-04-19 23:13|谷雨;2049-05-05 09:12|立夏;2049-05-20 22:03|小满;2049-06-05 13:03|芒种;2049-06-21 05:47|夏至;2049-07-06 23:08|小暑;2049-07-22 16:36|大暑;2049-08-07 08:58|立秋;2049-08-22 23:47|处暑;2049-09-07 12:05|白露;2049-09-22 21:42|秋分;2049-10-08 04:05|寒露;2049-10-23 07:25|霜降;2049-11-07 07:38|立冬;2049-11-22 05:19|小雪;2049-12-07 00:46|大雪;2049-12-21 18:52|冬至;2050-01-05 12:08|小寒;2050-01-20 05:33|大寒;2050-02-03 23:43|立春;2050-02-18 19:35|雨水;2050-03-05 17:32|惊蛰;2050-03-20 18:19|春分;2050-04-04 22:03|清明;2050-04-20 05:02|谷雨;2050-05-05 15:02|立夏;2050-05-21 03:50|小满;2050-06-05 18:54|芒种;2050-06-21 11:33|夏至;2050-07-07 05:02|小暑;2050-07-22 22:21|大暑;2050-08-07 14:52|立秋;2050-08-23 05:32|处暑;2050-09-07 18:00|白露;2050-09-23 03:28|秋分;2050-10-08 10:00|寒露;2050-10-23 13:11|霜降;2050-11-07 13:33|立冬;2050-11-22 11:06|小雪;2050-12-07 06:41|大雪;2050-12-22 00:38|冬至";
+  var TERMS = RAW.split(";").map(function (s) {
+    var p = s.split("|");
+    var d = p[0];
+    return {
+      name: p[1],
+      date: new Date(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10), +d.slice(11, 13), +d.slice(14, 16), 0)
+    };
+  });
+
+  var ORDER = ["立春","雨水","惊蛰","春分","清明","谷雨","立夏","小满","芒种","夏至","小暑","大暑","立秋","处暑","白露","秋分","寒露","霜降","立冬","小雪","大雪","冬至","小寒","大寒"];
+  var SEASON = {}; // 节气 -> 季色
+  ORDER.forEach(function (n, i) {
+    var k = i < 6 ? "spring" : i < 12 ? "summer" : i < 18 ? "autumn" : "winter";
+    SEASON[n] = k;
+  });
+  var SEASON_COLOR = { spring: "#6d8f5c", summer: "#a9443c", autumn: "#a5762f", winter: "#4b6377" };
+
+  var CN_MONTH = ["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"];
+  var CN_WEEK = ["日","一","二","三","四","五","六"];
+
+  var KEY = "anniv-widget-v1";
+  var DEFAULTS = {
+    a: "我",
+    b: "TA",
+    start: "2023-05-20",
+    startTime: "",
+    extras: [{ name: "情人节", m: 2, d: 14 }],
+    saved: false
+  };
+
+  /* ===== 小工具 ===== */
+  var $ = function (id) { return document.getElementById(id); };
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+
+  function dayDiff(from, to) {
+    return Math.round((startOfDay(to) - startOfDay(from)) / 86400000);
+  }
+
+  function cnDay(n) {
+    var base = ["一","二","三","四","五","六","七","八","九"];
+    if (n <= 9) return base[n - 1];
+    if (n === 10) return "十";
+    if (n < 20) return "十" + (n % 10 === 0 ? "" : base[n % 10 - 1]);
+    if (n === 20) return "二十";
+    if (n < 30) return "二十" + base[n % 10 - 1];
+    if (n === 30) return "三十";
+    return "三十一";
+  }
+
+  function fmtDate(d) {
+    return d.getFullYear() + "年" + (d.getMonth() + 1) + "月" + d.getDate() + "日";
+  }
+
+  function fmtTime(d) { return pad(d.getHours()) + ":" + pad(d.getMinutes()); }
+
+  function group(n) {
+    return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function breakdown(from, to) {
+    var y = to.getFullYear() - from.getFullYear();
+    var m = to.getMonth() - from.getMonth();
+    var d = to.getDate() - from.getDate();
+    if (d < 0) {
+      m -= 1;
+      d += new Date(to.getFullYear(), to.getMonth(), 0).getDate();
+    }
+    if (m < 0) { y -= 1; m += 12; }
+    return { y: y, m: m, d: d };
+  }
+
+  /* ===== 配置读写 ===== */
+  function load() {
+    var s = { a: DEFAULTS.a, b: DEFAULTS.b, start: DEFAULTS.start, startTime: DEFAULTS.startTime, extras: DEFAULTS.extras.slice(), saved: false };
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        if (o && o.start) {
+          s.a = o.a || s.a; s.b = o.b || s.b;
+          s.start = o.start; s.startTime = o.startTime || "";
+          if (Array.isArray(o.extras)) s.extras = o.extras;
+          s.saved = true;
+        }
+      }
+    } catch (e) {}
+    return s;
+  }
+
+  function persist(s) {
+    try { localStorage.setItem(KEY, JSON.stringify({ a: s.a, b: s.b, start: s.start, startTime: s.startTime, extras: s.extras })); } catch (e) {}
+  }
+
+  var state = load();
+
+  function parseStart() {
+    var v = state.start || DEFAULTS.start;
+    var y = +v.slice(0, 4), m = +v.slice(5, 7), d = +v.slice(8, 10);
+    if (!y || !m || !d) return startOfDay(new Date());
+    return new Date(y, m - 1, d);
+  }
+
+  function startStamp() {
+    var sd = parseStart();
+    if (state.startTime) {
+      var h = +state.startTime.slice(0, 2), mi = +state.startTime.slice(3, 5);
+      return new Date(sd.getFullYear(), sd.getMonth(), sd.getDate(), h || 0, mi || 0, 0);
+    }
+    return new Date(sd.getFullYear(), sd.getMonth(), sd.getDate(), 0, 0, 0);
+  }
+
+  /* ===== 待办事项 ===== */
+  function yearlyNext(month, day, now) {
+    var y = now.getFullYear();
+    var cand = new Date(y, month - 1, day);
+    if (dayDiff(now, cand) < 0) cand = new Date(y + 1, month - 1, day);
+    return cand;
+  }
+
+  function buildItems(now) {
+    var items = [];
+    var sd = parseStart();
+
+    // 周年
+    var anniv = new Date(now.getFullYear(), sd.getMonth(), sd.getDate());
+    if (dayDiff(now, anniv) < 0) anniv = new Date(now.getFullYear() + 1, sd.getMonth(), sd.getDate());
+    var n = anniv.getFullYear() - sd.getFullYear();
+    if (n > 0) items.push({ name: n + " 周年", date: anniv, kind: "anniv" });
+
+    // 自定义 / 固定节日
+    (state.extras || []).forEach(function (e) {
+      if (!e || !e.m || !e.d) return;
+      items.push({ name: e.name || "纪念日", date: yearlyNext(e.m, e.d, now), kind: "fixed" });
+    });
+
+    // 指定节气
+    ["立秋", "冬至"].forEach(function (nm) {
+      var t = TERMS.filter(function (x) { return x.name === nm && x.date >= startOfDay(now); })[0];
+      if (t) items.push({ name: nm, date: t.date, kind: "term" });
+    });
+
+    items.sort(function (p, q) { return p.date - q.date; });
+
+    // 同一天的多件事合并成一行，避免重复
+    var merged = [];
+    items.forEach(function (it) {
+      var key = it.date.getFullYear() + "-" + it.date.getMonth() + "-" + it.date.getDate();
+      var last = merged[merged.length - 1];
+      if (last && last.key === key) {
+        last.name = last.name + " · " + it.name;
+        if (it.kind === "term") last.kind = "term";
+      } else {
+        it.key = key;
+        merged.push(it);
+      }
+    });
+    return merged;
+  }
+
+  function currentTerm(now) {
+    var i = TERMS.length - 1;
+    while (i >= 0 && TERMS[i].date > now) i--;
+    return TERMS[i] || TERMS[0];
+  }
+
+  function nextTerm(now) {
+    return TERMS.filter(function (t) { return t.date >= startOfDay(now); })[0];
+  }
+
+  /* ===== 渲染 ===== */
+  function render() {
+    var now = new Date();
+    var sd = parseStart();
+
+    // 顶栏
+    $("dateline").innerHTML = "<b>" + CN_MONTH[now.getMonth()] + cnDay(now.getDate()) + "日</b> · 星期" + CN_WEEK[now.getDay()];
+
+    var ct = currentTerm(now);
+    $("todayTerm").textContent = ct.name;
+    document.documentElement.style.setProperty("--accent", SEASON_COLOR[SEASON[ct.name] || "autumn"]);
+
+    // 主数字：第 N 天
+    var days = dayDiff(sd, now) + 1;
+    if (days < 1) {
+      days = 0;
+      $("days").textContent = "—";
+      $("breakdown").innerHTML = "还没有到约好的那一天";
+    } else {
+      $("days").textContent = group(days);
+      var bd = breakdown(sd, now);
+      var parts = [];
+      if (bd.y > 0) parts.push("<em>" + bd.y + "</em> 年");
+      if (bd.y > 0 || bd.m > 0) parts.push("<em>" + bd.m + "</em> 个月");
+      parts.push("<em>" + bd.d + "</em> 天");
+      $("breakdown").innerHTML = "在一起的 " + parts.join(" ");
+    }
+
+    $("since").textContent = "起始 " + fmtDate(sd) + (state.startTime ? " " + state.startTime : "") +
+      (state.saved ? "" : " · 这是示例日期，点右上角改成你们的第一天");
+
+    // 下一件事
+    var items = buildItems(now);
+    if (items.length) {
+      var it = items[0];
+      var dd = dayDiff(now, it.date);
+      $("nextName").textContent = it.name;
+      if (dd === 0) {
+        $("nextNum").textContent = "今天";
+        $("nextNum").style.fontSize = "38px";
+        $("nextUnit").textContent = it.kind === "term" ? "· " + fmtTime(it.date) : "";
+      } else {
+        $("nextNum").textContent = group(dd);
+        $("nextNum").style.fontSize = "";
+        $("nextUnit").textContent = "天";
+      }
+      $("nextMeta").textContent = fmtDate(it.date) + (it.kind === "term" ? " " + fmtTime(it.date) + " 交节" : " 零点");
+
+      // 往后数
+      var rows = $("rows");
+      rows.innerHTML = "";
+      var rest = items.slice(1, 6);
+      if (!rest.length) rest = items.slice(0, 1);
+      rest.forEach(function (x) {
+        var d2 = dayDiff(now, x.date);
+        var row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML =
+          '<span class="row-dot"></span>' +
+          '<div class="row-main"><div class="row-name">' + esc(x.name) + '</div>' +
+          '<div class="row-date">' + fmtDate(x.date) + (x.kind === "term" ? " " + fmtTime(x.date) : "") + '</div></div>' +
+          '<div class="row-num' + (d2 === 0 ? " today" : "") + '">' + (d2 === 0 ? "今天" : group(d2) + "<small>天</small>") + '</div>';
+        rows.appendChild(row);
+      });
+    }
+
+    // 节气刻度
+    var dots = $("dots");
+    if (!dots.childElementCount) {
+      for (var i = 0; i < 24; i++) {
+        var el = document.createElement("div");
+        el.className = "dot";
+        el.title = ORDER[i];
+        el.style.background = SEASON_COLOR[SEASON[ORDER[i]]];
+        dots.appendChild(el);
+      }
+    }
+    var idx = ORDER.indexOf(ct.name);
+    Array.prototype.forEach.call(dots.children, function (el, i) {
+      el.className = "dot" + (i === idx ? " now" : i < idx ? " past" : "");
+    });
+    $("termIndex").textContent = "第 " + (idx + 1) + " / 24";
+
+    var nt = nextTerm(now);
+    if (nt) {
+      var gap = dayDiff(now, nt.date);
+      $("termFoot").innerHTML =
+        "现在 <b>" + ct.name + "</b>　距 " + nt.name + " 还有 " +
+        (gap === 0 ? "不到一天" : group(gap) + " 天") +
+        "（" + (nt.date.getMonth() + 1) + "月" + nt.date.getDate() + "日 " + fmtTime(nt.date) + "）";
+    }
+
+    tickSeconds();
+  }
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+
+  function tickSeconds() {
+    var now = new Date();
+    var secs = Math.floor((now - startStamp()) / 1000);
+    if (secs < 0) secs = 0;
+    $("clock").innerHTML = "每一秒都在加一 · <span>" + group(secs) + "</span> 秒";
+  }
+
+  /* ===== 设置面板 ===== */
+  function openPanel() {
+    $("inA").value = state.a;
+    $("inB").value = state.b;
+    $("inDate").value = state.start;
+    $("inTime").value = state.startTime || "";
+    renderExtras(state.extras);
+    $("mask").classList.add("on");
+    setTimeout(function () { $("inDate").focus(); }, 60);
+  }
+
+  function renderExtras(list) {
+    var box = $("extraList");
+    box.innerHTML = "";
+    (list.length ? list : []).forEach(function (e, i) {
+      var row = document.createElement("div");
+      row.className = "extra-row";
+      row.innerHTML =
+        '<input name="ename" maxlength="10" placeholder="名字，如 情人节" value="' + esc(e.name || "") + '">' +
+        '<input name="edate" maxlength="5" placeholder="02-14" value="' + pad(e.m) + "-" + pad(e.d) + '">' +
+        '<button class="del" data-i="' + i + '" title="删掉">×</button>';
+      box.appendChild(row);
+    });
+    box.onclick = function (ev) {
+      var t = ev.target;
+      if (t && t.classList && t.classList.contains("del")) {
+        var i = +t.getAttribute("data-i");
+        var cur = readExtras();
+        cur.splice(i, 1);
+        renderExtras(cur);
+      }
+    };
+  }
+
+  function readExtras() {
+    var rows = $("extraList").querySelectorAll(".extra-row");
+    var out = [];
+    Array.prototype.forEach.call(rows, function (r) {
+      var nm = r.querySelector('[name="ename"]').value.trim();
+      var dt = r.querySelector('[name="edate"]').value.trim();
+      var mm = dt.match(/(\d{1,2})\s*[.\-/月]\s*(\d{1,2})/);
+      if (!nm || !mm) return;
+      var m = +mm[1], d = +mm[2];
+      if (m >= 1 && m <= 12 && d >= 1 && d <= 31) out.push({ name: nm, m: m, d: d });
+    });
+    return out;
+  }
+
+  function closePanel() { $("mask").classList.remove("on"); }
+
+  $("gear").addEventListener("click", openPanel);
+  $("cancel").addEventListener("click", closePanel);
+  $("mask").addEventListener("click", function (e) { if (e.target === $("mask")) closePanel(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePanel(); });
+
+  $("addExtra").addEventListener("click", function () {
+    var cur = readExtras();
+    cur.push({ name: "生日", m: 4, d: 18 });
+    renderExtras(cur);
+  });
+
+  $("save").addEventListener("click", function () {
+    var d = $("inDate").value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) { $("inDate").focus(); return; }
+    state.a = $("inA").value.trim() || "我";
+    state.b = $("inB").value.trim() || "TA";
+    state.start = d;
+    state.startTime = $("inTime").value || "";
+    state.extras = readExtras();
+    state.saved = true;
+    persist(state);
+    closePanel();
+    render();
+  });
+
+  /* ===== 启动 ===== */
+  var lastDay = new Date().toDateString();
+  render();
+  setInterval(function () {
+    var now = new Date();
+    tickSeconds();
+    if (now.toDateString() !== lastDay) { lastDay = now.toDateString(); render(); }
+  }, 1000);
+})();
+
+</script>
+</body>
+</html>

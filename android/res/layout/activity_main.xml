@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F4EDE2"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:paddingTop="26dp"
+        android:paddingBottom="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="纪念日小窗"
+            android:textSize="26sp"
+            android:fontFamily="serif"
+            android:textColor="#232019" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="改完点保存，桌面小组件立刻刷新。"
+            android:textSize="13sp"
+            android:textColor="#7A7164"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="3dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="在一起的起始日"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="26dp" />
+
+        <TextView
+            android:id="@+id/dateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2023 年 05 月 20 日"
+            android:textSize="21sp"
+            android:fontFamily="serif"
+            android:textColor="#232019"
+            android:paddingTop="9dp"
+            android:paddingBottom="11dp"
+            android:paddingLeft="1dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1F232019" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="计时"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="22dp" />
+
+        <TextView
+            android:id="@+id/tvPause"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#7A7164"
+            android:layout_marginTop="4dp"
+            android:lineSpacingExtra="2dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/btnPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="暂停计时"
+            android:textSize="12.5sp"
+            android:textColor="#A9443C"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="生日 · 纪念日"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="22dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="每年重复倒数。写「她的生日」「在一起纪念日」都行，会自动按最近的日期算。"
+            android:textSize="11.5sp"
+            android:textColor="#A09789"
+            android:layout_marginTop="4dp"
+            android:lineSpacingExtra="2dp" />
+
+        <LinearLayout
+            android:id="@+id/listExtra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/btnAddExtra"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="＋ 添加一条"
+            android:textSize="13sp"
+            android:textColor="#A9443C"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1F232019"
+            android:layout_marginTop="6dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="天气城市"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="填城市名（如「青岛」「济南」「上海」），小组件右上角显示当地实时温度和天气；默认用国内的「中国天气网」，和手机自带天气更接近。"
+            android:textSize="11.5sp"
+            android:textColor="#A09789"
+            android:layout_marginTop="4dp"
+            android:lineSpacingExtra="2dp" />
+
+        <TextView
+            android:id="@+id/tvPlace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="11.5sp"
+            android:textColor="#7A7164"
+            android:layout_marginTop="2dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/btnLoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用手机定位自动确定"
+            android:textSize="12.5sp"
+            android:textColor="#A9443C"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/btnSrc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="数据源：国内（中国天气网）· 点我切换"
+            android:textSize="12sp"
+            android:textColor="#5F574C"
+            android:layout_marginTop="6dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvWeatherNow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="11.5sp"
+                android:textColor="#7A7164"
+                android:text="" />
+
+            <TextView
+                android:id="@+id/btnWeather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="刷新天气"
+                android:textSize="12sp"
+                android:textColor="#A9443C"
+                android:background="@drawable/btn_bg"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="7dp"
+                android:paddingBottom="7dp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="青岛"
+            android:textSize="13sp"
+            android:textColor="#232019"
+            android:textColorHint="#B3A995"
+            android:inputType="text"
+            android:singleLine="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="每日一句"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="填智谱 GLM-4-Flash 的 API Key，每 5 小时自动写一句贴合当下节气的祝福或礼物建议。不填也能用，会用内置文案。"
+            android:textSize="11.5sp"
+            android:textColor="#A09789"
+            android:layout_marginTop="4dp"
+            android:lineSpacingExtra="2dp" />
+
+        <EditText
+            android:id="@+id/etKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="API Key（留空则用内置文案）"
+            android:textSize="13sp"
+            android:textColor="#232019"
+            android:textColorHint="#B3A995"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:paddingTop="10dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/btnGen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="现在生成一句"
+            android:textSize="12.5sp"
+            android:textColor="#A9443C"
+            android:paddingTop="8dp"
+            android:paddingBottom="10dp" />
+
+        <TextView
+            android:id="@+id/tvQuote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#5F574C"
+            android:lineSpacingExtra="3dp"
+            android:text="" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="相框照片"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="18dp" />
+
+        <TextView
+            android:id="@+id/tvPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="还没放照片，中间那块会显示一个空相框。"
+            android:textSize="11.5sp"
+            android:textColor="#A09789"
+            android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/btnPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选一张照片"
+                android:textSize="13sp"
+                android:textColor="#A9443C"
+                android:background="@drawable/btn_bg"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="9dp"
+                android:paddingBottom="9dp" />
+
+            <TextView
+                android:id="@+id/btnPhotoClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="清除"
+                android:textSize="13sp"
+                android:textColor="#8D8478"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="9dp"
+                android:paddingBottom="9dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="版式（可随时切回）"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="现在：相框版（中间放照片）"
+            android:textSize="11.5sp"
+            android:textColor="#A09789"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/btnLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="回退到无相框版"
+            android:textSize="13sp"
+            android:textColor="#A9443C"
+            android:background="@drawable/btn_bg"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:paddingTop="9dp"
+            android:paddingBottom="9dp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#1F232019"
+            android:layout_marginTop="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="小组件样式"
+            android:textSize="10.5sp"
+            android:textColor="#8D8478"
+            android:letterSpacing="0.12"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="点一下立刻换，桌面上的小组件会跟着变。"
+            android:textSize="11.5sp"
+            android:textColor="#A09789"
+            android:layout_marginTop="4dp" />
+
+        <LinearLayout
+            android:id="@+id/listStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="2dp" />
+
+        <TextView
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="保存并刷新"
+            android:textSize="15sp"
+            android:textColor="#FBF6EC"
+            android:gravity="center"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:background="@drawable/btn_bg"
+            android:layout_marginTop="26dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="长按桌面空白处 → 小组件 → 找到「纪念日小窗」→ 拖到桌面。点小组件可回到这一页。"
+            android:textSize="11.5sp"
+            android:textColor="#A09789"
+            android:lineSpacingExtra="4dp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>
